@@ -1,0 +1,274 @@
+openapi: 3.0.3
+info:
+  title: Flight Booking API
+  version: 1.0.0
+
+paths:
+  /cities:
+    get:
+      summary: List all available source and destination cities
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sourceCities:
+                    type: array
+                    items:
+                      type: string
+                  destinationCities:
+                    type: array
+                    items:
+                      type: string
+
+  /airports:
+    get:
+      summary: List all available source and destination airports
+      parameters:
+        - name: city
+          in: query
+          description: City name
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sourceAirports:
+                    type: array
+                    items:
+                      type: string
+                  destinationAirports:
+                    type: array
+                    items:
+                      type: string
+                      
+  /inbound-schedule:
+    get:
+      summary: List inbound schedule for an airport
+      parameters:
+        - name: airport
+          in: query
+          description: Airport code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InboundFlightDto" 
+
+  /outbound-schedule:
+    get:
+      summary: List outbound schedule for an airport
+      parameters:
+        - name: airport
+          in: query
+          description: Airport code
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OutboundFlightDto" 
+
+  /routes:
+    get:
+      summary: List routes connecting two points
+      parameters:
+        - name: sourceAirport
+          in: query
+          description: Source airport
+          required: false
+          schema:
+            type: string
+        - name: sourceCity
+          in: query
+          description: Source city
+          required: false
+          schema:
+            type: string
+        - name: destinationAirport
+          in: query
+          description: Destination airport
+          required: false
+          schema:
+            type: string
+        - name: destinationCity
+          in: query
+          description: Destination city
+          required: false
+          schema:
+            type: string
+        - name: departureDate
+          in: query
+          description: Departure date
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: bookingClass
+          in: query
+          description: Booking class
+          required: false
+          schema:
+            type: string
+            enum: ["ECONOMY", "COMFORT", "BUSINESS"]
+        - name: maxConnections
+          in: query
+          description: Maximum number of connections (0 - direct, 1, 2, 3, default  - unbound)
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    route:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/RouteDto"
+
+  /bookings:
+    post:
+      summary: Create a booking for a selected route for a single passenger
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                route:
+                  $ref: "#/components/schemas/RouteDto"
+                passenger:
+                  $ref: "#/components/schemas/PassengerDto"    
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bookingId:
+                    type: string
+        '400':
+          $ref: "#/components/responses/BadRequest"
+
+  /check-in:
+    post:
+      summary: Perform online check-in for a flight
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bookingId:
+                  type: string
+      responses:
+        '201':
+          description: Created
+        '400':
+          $ref: "#/components/responses/BadRequest"
+
+components:
+  responses:
+    BadRequest:
+      description: 400 Bad Request response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/HttpError"
+  schemas:
+    OutboundFlightDto:
+      type: object
+      properties:
+        dayOfWeek:
+          type: string
+        departureTime:
+          type: string
+        flightNo:
+          type: string
+        destination:
+          type: string
+          
+    InboundFlightDto:
+      type: object
+      properties:
+        dayOfWeek:
+          type: string
+        departureTime:
+          type: string
+        flightNo:
+          type: string
+        origin:
+          type: string
+  
+    RouteDto:
+      type: object
+      properties:
+        flightNo:
+          type: string
+        departureTime:
+          type: string
+        arrivalTime:
+          type: string
+        origin:
+          type: string
+        destination:
+          type: string
+  
+    PassengerDto:
+      type: object
+      properties:
+        name:
+          type: string
+        contactData:
+          type: object
+          properties:
+            email:
+              type: string
+              example: "mymail@mail.ru"
+            phone:
+              type: string
+              example: "89831217362"
+
+    HttpError:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      required:
+        - code
+        - message
