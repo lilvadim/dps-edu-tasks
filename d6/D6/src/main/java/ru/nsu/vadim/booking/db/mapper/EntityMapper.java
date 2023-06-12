@@ -1,19 +1,19 @@
 package ru.nsu.vadim.booking.db.mapper;
 
-import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import ru.nsu.vadim.booking.db.entity.AirportEntity;
-import ru.nsu.vadim.booking.domain.model.Airport;
-import ru.nsu.vadim.booking.domain.model.City;
-import ru.nsu.vadim.booking.domain.model.LocalizedString;
+import ru.nsu.vadim.booking.db.entity.FlightEntity;
+import ru.nsu.vadim.booking.domain.model.*;
 
+import java.time.DayOfWeek;
+import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
 @Mapper(
         componentModel = "spring",
-        unmappedSourcePolicy = ReportingPolicy.ERROR,
+        unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public abstract class EntityMapper {
@@ -28,5 +28,21 @@ public abstract class EntityMapper {
 
     protected TimeZone map(String value) {
         return TimeZone.getTimeZone(value);
+    }
+
+    @Mapping(target = "dayOfWeek", source = "scheduledArrival")
+    @Mapping(target = "timeOfArrival", source = "scheduledArrival")
+    @Mapping(target = "originAirportCode", source = "departureAirport")
+    public abstract InboundScheduleItem mapToInboundScheduleItem(FlightEntity flightEntity);
+
+
+    @Mapping(target = "timeOfDeparture", source = "scheduledDeparture")
+    @Mapping(target = "destinationAirportCode", source = "arrivalAirport")
+    @Mapping(target = "dayOfWeek", source = "scheduledDeparture")
+    public abstract OutboundScheduleItem mapToOutboundScheduleItem(FlightEntity flightEntity);
+
+
+    protected DayOfWeek map(ZonedDateTime zonedDateTime) {
+        return zonedDateTime.getDayOfWeek();
     }
 }

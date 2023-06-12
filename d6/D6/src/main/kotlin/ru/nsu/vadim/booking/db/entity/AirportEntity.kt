@@ -17,13 +17,10 @@ class AirportEntity {
     @Convert(converter = LocalizedStringJsonConverter::class)
     lateinit var name: LocalizedString
 
-    @Column
     @Convert(converter = CityJsonConverter::class)
     lateinit var city: City
 
-    @Column
     lateinit var coordinates: String
 
-    @Column
     lateinit var timezone: String
 }

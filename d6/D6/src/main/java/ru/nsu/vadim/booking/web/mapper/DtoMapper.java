@@ -3,9 +3,7 @@ package ru.nsu.vadim.booking.web.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-import ru.nsu.vadim.booking.web.dto.Airport;
-import ru.nsu.vadim.booking.web.dto.City;
-import ru.nsu.vadim.booking.web.dto.LocalizedString;
+import ru.nsu.vadim.booking.web.dto.*;
 
 @Mapper(
         componentModel = "spring",
@@ -21,4 +19,7 @@ public abstract class DtoMapper {
     @Mapping(target = "copy", ignore = true)
     public abstract City mapCity(ru.nsu.vadim.booking.domain.model.City city);
 
+    public abstract InboundScheduleItem mapItem(ru.nsu.vadim.booking.domain.model.InboundScheduleItem inboundScheduleItem);
+
+    public abstract OutboundScheduleItem mapItem(ru.nsu.vadim.booking.domain.model.OutboundScheduleItem outboundScheduleItem);
 }
