@@ -22,6 +22,6 @@ class AirportRepositoryAdapter(
     }
 
     override fun findAllCities(): List<City> {
-        return airportRepository.findAllBy().map { entityMapper.mapCity(it) }
+        return airportRepository.findAllBy().map { entityMapper.mapToCity(it) }
     }
 }

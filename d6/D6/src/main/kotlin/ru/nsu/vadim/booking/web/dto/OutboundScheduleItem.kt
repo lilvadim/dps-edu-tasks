@@ -1,11 +1,11 @@
 package ru.nsu.vadim.booking.web.dto
 
 import java.time.DayOfWeek
-import java.time.ZonedDateTime
+import java.time.OffsetTime
 
 data class OutboundScheduleItem(
-    val dayOfWeek: DayOfWeek,
-    val timeOfDeparture: ZonedDateTime,
+    val daysOfWeek: List<DayOfWeek>,
+    val timeOfDeparture: OffsetTime,
     val flightNo: String,
     val destinationAirportCode: String,
 )

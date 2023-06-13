@@ -1,10 +1,8 @@
 package ru.nsu.vadim.booking.db.entity
 
 import jakarta.persistence.*
-import ru.nsu.vadim.booking.db.entity.converter.CityJsonConverter
-import ru.nsu.vadim.booking.db.entity.converter.LocalizedStringJsonConverter
-import ru.nsu.vadim.booking.db.entity.type.City
-import ru.nsu.vadim.booking.db.entity.type.LocalizedString
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "airports_data", schema = "bookings")
@@ -14,11 +12,11 @@ class AirportEntity {
     lateinit var code: String
 
     @Column(name = "airport_name")
-    @Convert(converter = LocalizedStringJsonConverter::class)
-    lateinit var name: LocalizedString
+    @JdbcTypeCode(SqlTypes.JSON)
+    lateinit var name: Map<String, String>
 
-    @Convert(converter = CityJsonConverter::class)
-    lateinit var city: City
+    @JdbcTypeCode(SqlTypes.JSON)
+    lateinit var city: Map<String, String>
 
     lateinit var coordinates: String
 
