@@ -1,16 +1,11 @@
 package ru.nsu.vadim.booking.web.controller
 
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import ru.nsu.vadim.booking.domain.service.AirportService
+import ru.nsu.vadim.booking.domain.service.BookingService
 import ru.nsu.vadim.booking.domain.service.ScheduleService
-import ru.nsu.vadim.booking.web.dto.Airport
-import ru.nsu.vadim.booking.web.dto.City
-import ru.nsu.vadim.booking.web.dto.InboundScheduleItem
-import ru.nsu.vadim.booking.web.dto.OutboundScheduleItem
+import ru.nsu.vadim.booking.web.dto.*
 import ru.nsu.vadim.booking.web.mapper.DtoMapper
 
 @RestController
@@ -19,6 +14,7 @@ class BookingController(
     private val airportService: AirportService,
     private val dtoMapper: DtoMapper,
     private val scheduleService: ScheduleService,
+    private val bookingService: BookingService,
 ) {
     @Operation(description = "List all available source and destination airports")
     @GetMapping("/airports")
@@ -42,5 +38,11 @@ class BookingController(
     @GetMapping("/outbound-schedule")
     fun outboundSchedule(@RequestParam(required = true) airportCode: String): List<OutboundScheduleItem> {
         return scheduleService.getOutboundSchedule(airportCode).map { dtoMapper.mapItem(it) }
+    }
+
+    @Operation(description = "Create a booking for a selected route for a single passenger")
+    @PostMapping("/bookings")
+    fun createBooking(@RequestBody bookingRequest: BookingRequest) {
+        bookingService.booking(dtoMapper.map(bookingRequest))
     }
 }

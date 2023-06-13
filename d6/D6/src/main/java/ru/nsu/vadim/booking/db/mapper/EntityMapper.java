@@ -43,4 +43,11 @@ public abstract class EntityMapper {
     protected DayOfWeek mapDay(Number number) {
         return DayOfWeek.of(number.intValue());
     }
+
+    protected Map<String, String> mapContactData(ContactData data) {
+        return Map.of(
+                "phone", data.getPhone(),
+                "email", data.getEmail()
+        );
+    }
 }
