@@ -22,8 +22,8 @@ GROUP BY f.flight_no, bp.seat_no, tf.fare_conditions;
 create unique index prices_pkey
     on bookings.prices (flight_no, seat_no, fare_conditions);
 
-alter table bookings.prices
-    add constraint prices_pkey
-        primary key (flight_no, seat_no, fare_conditions);
+-- alter table bookings.prices
+--     add constraint prices_pkey
+--         primary key (flight_no, seat_no, fare_conditions);
 
 
