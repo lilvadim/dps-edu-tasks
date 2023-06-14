@@ -28,7 +28,9 @@ class BookingRepositoryPortAdapter(
     override fun createBooking(bookingRequest: BookingRequest): Ticket {
         val flightId = bookingRequest.flightId
 
-        val flightEntity = flightRepository.findById(flightId).orElseThrow()
+        val flightEntity = flightRepository.findById(flightId).orElseThrow {
+            IllegalArgumentException("Flight with flightId $flightId not found")
+        }
 
         val price = priceRepository.findById(
             PriceEntity.Identifier().apply {
@@ -36,7 +38,9 @@ class BookingRepositoryPortAdapter(
                 seatNo = bookingRequest.seatNo
                 fareConditions = bookingRequest.fareConditions.toString()
             }
-        ).orElseThrow()
+        ).orElseThrow {
+            IllegalStateException("Pricing Error")
+        }
 
         val amount = price.amounts.min()
 
