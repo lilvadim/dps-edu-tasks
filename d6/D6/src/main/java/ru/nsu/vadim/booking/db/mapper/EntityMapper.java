@@ -20,14 +20,11 @@ import java.util.TimeZone;
 )
 public abstract class EntityMapper {
     @Mapping(target = "timeZone", source = "timezone")
+    @Mapping(target = "city.name", source = "city")
     public abstract Airport mapAirportEntity(AirportEntity airportEntity);
 
     protected LocalizedString mapToLocalizedString(Map<String, String> map) {
         return new LocalizedString(map);
-    }
-
-    public City mapToCity(Map<String, String> map) {
-        return new City(mapToLocalizedString(map));
     }
 
     @Mapping(target = "name", source = "city")
