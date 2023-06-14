@@ -24,4 +24,10 @@ public abstract class DtoMapper {
     public abstract OutboundScheduleItem mapItem(ru.nsu.vadim.booking.domain.model.OutboundScheduleItem outboundScheduleItem);
 
     public abstract ru.nsu.vadim.booking.domain.model.BookingRequest map(BookingRequest bookingRequest);
+
+    public abstract Ticket map(ru.nsu.vadim.booking.domain.model.Ticket ticket);
+
+    public abstract BoardingPass map(ru.nsu.vadim.booking.domain.model.BoardingPass boardingPass);
+
+    public abstract ru.nsu.vadim.booking.domain.model.CheckInRequest map(CheckInRequest checkInRequest);
 }

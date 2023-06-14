@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.nsu.vadim.booking.domain.service.AirportService
 import ru.nsu.vadim.booking.domain.service.BookingService
+import ru.nsu.vadim.booking.domain.service.CheckInService
 import ru.nsu.vadim.booking.domain.service.ScheduleService
 import ru.nsu.vadim.booking.web.dto.*
 import ru.nsu.vadim.booking.web.mapper.DtoMapper
@@ -18,6 +19,7 @@ class BookingController(
     private val dtoMapper: DtoMapper,
     private val scheduleService: ScheduleService,
     private val bookingService: BookingService,
+    private val checkInService: CheckInService,
 ) {
     @Operation(description = "List all available source and destination airports")
     @GetMapping("/airports")
@@ -48,8 +50,17 @@ class BookingController(
         responses = [ApiResponse(responseCode = "201", description = "Created")]
     )
     @PostMapping("/bookings")
-    fun createBooking(@RequestBody bookingRequest: BookingRequest): ResponseEntity<Any> {
-        bookingService.booking(dtoMapper.map(bookingRequest))
-        return ResponseEntity.status(HttpStatus.CREATED).build()
+    fun createBooking(@RequestBody bookingRequest: BookingRequest): ResponseEntity<Ticket> {
+        val ticket = bookingService.booking(dtoMapper.map(bookingRequest))
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(dtoMapper.map(ticket))
+    }
+
+    @Operation(description = "Online check-in for a flight")
+    @PostMapping("/check-in")
+    fun checkIn(@RequestBody request: CheckInRequest): ResponseEntity<BoardingPass> {
+        val boardingPass = checkInService.checkIn(dtoMapper.map(request))
+        return ResponseEntity.ok(dtoMapper.map(boardingPass))
     }
 }

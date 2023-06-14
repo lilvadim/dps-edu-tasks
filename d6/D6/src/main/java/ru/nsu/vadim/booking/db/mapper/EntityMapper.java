@@ -4,6 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import ru.nsu.vadim.booking.db.entity.AirportEntity;
+import ru.nsu.vadim.booking.db.entity.BoardingPassEntity;
+import ru.nsu.vadim.booking.db.entity.TicketEntity;
 import ru.nsu.vadim.booking.db.entity.projection.CityField;
 import ru.nsu.vadim.booking.domain.model.*;
 
@@ -44,10 +46,27 @@ public abstract class EntityMapper {
         return DayOfWeek.of(number.intValue());
     }
 
-    protected Map<String, String> mapContactData(ContactData data) {
-        return Map.of(
-                "phone", data.getPhone(),
-                "email", data.getEmail()
+    @Mapping(target = "passenger", source = ".")
+    @Mapping(target = "bookRef", source = "bookRef.bookRef")
+    public abstract Ticket map(TicketEntity ticketEntity);
+
+    @Mapping(target = "name", source = "passengerName")
+    @Mapping(target = "id", source = "passengerId")
+    protected abstract Passenger mapPassenger(TicketEntity entity);
+
+    protected ContactData mapContactData(Map<String, String> map) {
+        if (map == null) {
+            return null;
+        }
+
+        return new ContactData(
+                map.get("phone"),
+                map.get("email")
         );
     }
+
+    public abstract BoardingPass map(BoardingPassEntity entity);
+
+    @Mapping(target = "boardingNo", ignore = true)
+    public abstract BoardingPassEntity map(CheckInRequest checkInRequest);
 }

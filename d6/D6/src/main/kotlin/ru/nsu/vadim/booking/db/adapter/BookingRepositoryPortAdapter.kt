@@ -7,8 +7,10 @@ import ru.nsu.vadim.booking.db.entity.BookingEntity
 import ru.nsu.vadim.booking.db.entity.PriceEntity
 import ru.nsu.vadim.booking.db.entity.TicketEntity
 import ru.nsu.vadim.booking.db.entity.TicketFlightEntity
+import ru.nsu.vadim.booking.db.mapper.EntityMapper
 import ru.nsu.vadim.booking.db.repository.*
 import ru.nsu.vadim.booking.domain.model.BookingRequest
+import ru.nsu.vadim.booking.domain.model.Ticket
 import ru.nsu.vadim.booking.domain.service.port.BookingRepositoryPort
 import java.time.ZonedDateTime
 
@@ -19,10 +21,11 @@ class BookingRepositoryPortAdapter(
     private val ticketFlightRepository: TicketFlightRepository,
     private val flightRepository: FlightRepository,
     private val priceRepository: PriceRepository,
+    private val entityMapper: EntityMapper,
 ) : BookingRepositoryPort {
 
     @Transactional
-    override fun createBooking(bookingRequest: BookingRequest) {
+    override fun createBooking(bookingRequest: BookingRequest): Ticket {
         val flightId = bookingRequest.flightId
 
         val flightEntity = flightRepository.findById(flightId).orElseThrow()
@@ -66,6 +69,8 @@ class BookingRepositoryPortAdapter(
         }
 
         ticketFlightRepository.save(ticketFlightEntity)
+
+        return entityMapper.map(ticketEntity)
     }
 
 }
