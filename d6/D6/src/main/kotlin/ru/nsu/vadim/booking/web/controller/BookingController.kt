@@ -1,6 +1,9 @@
 package ru.nsu.vadim.booking.web.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import ru.nsu.vadim.booking.domain.service.AirportService
 import ru.nsu.vadim.booking.domain.service.BookingService
@@ -40,9 +43,13 @@ class BookingController(
         return scheduleService.getOutboundSchedule(airportCode).map { dtoMapper.mapItem(it) }
     }
 
-    @Operation(description = "Create a booking for a selected route for a single passenger")
+    @Operation(
+        description = "Create a booking for a selected route for a single passenger",
+        responses = [ApiResponse(responseCode = "201", description = "Created")]
+    )
     @PostMapping("/bookings")
-    fun createBooking(@RequestBody bookingRequest: BookingRequest) {
+    fun createBooking(@RequestBody bookingRequest: BookingRequest): ResponseEntity<Any> {
         bookingService.booking(dtoMapper.map(bookingRequest))
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 }

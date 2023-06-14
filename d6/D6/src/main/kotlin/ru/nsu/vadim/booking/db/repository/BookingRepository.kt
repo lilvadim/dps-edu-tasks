@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 import ru.nsu.vadim.booking.db.entity.BookingEntity
 
 @Repository
-interface BookingRepository : JpaRepository<BookingEntity, String> {
-}
+interface BookingRepository : JpaRepository<BookingEntity, String>

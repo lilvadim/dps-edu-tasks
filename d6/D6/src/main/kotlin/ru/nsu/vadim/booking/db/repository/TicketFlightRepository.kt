@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 import ru.nsu.vadim.booking.db.entity.TicketFlightEntity
 
 @Repository
-interface TicketFlightRepository : JpaRepository<TicketFlightEntity, Long> {
-}
+interface TicketFlightRepository : JpaRepository<TicketFlightEntity, Long>
