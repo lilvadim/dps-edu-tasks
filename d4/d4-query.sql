@@ -13,7 +13,7 @@ CREATE TABLE prices AS
 SELECT f.flight_no,
        bp.seat_no,
        tf.fare_conditions,
-       CAST(ARRAY_AGG(DISTINCT (tf.amount)) as double precision[]) as amounts
+       ARRAY_AGG(DISTINCT (tf.amount)) as amounts
 FROM ticket_flights tf
          JOIN boarding_passes bp ON tf.ticket_no = bp.ticket_no
          JOIN flights f ON f.flight_id = tf.flight_id

@@ -46,7 +46,7 @@ class BookingRepositoryPortAdapter(
 
         var bookingEntity = BookingEntity().apply {
             bookRef = RandomStringUtils.randomAlphanumeric(6).uppercase()
-            totalAmount = amount.toBigDecimal()
+            totalAmount = amount
             bookDate = ZonedDateTime.now()
         }
 
@@ -69,7 +69,7 @@ class BookingRepositoryPortAdapter(
             ticketNo = ticketEntity.ticketNo
             this.flightId = flightEntity.id
             fareConditions = price.fareConditions
-            this.amount = amount.toBigDecimal()
+            this.amount = amount
         }
 
         ticketFlightRepository.save(ticketFlightEntity)

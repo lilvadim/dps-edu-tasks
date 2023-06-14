@@ -4,6 +4,7 @@ import com.vladmihalcea.hibernate.type.array.ListArrayType
 import jakarta.persistence.*
 import org.hibernate.annotations.Type
 import java.io.Serializable
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "prices")
@@ -26,6 +27,6 @@ class PriceEntity {
     lateinit var fareConditions: String
 
     @Type(ListArrayType::class)
-    lateinit var amounts: List<Double>
+    lateinit var amounts: List<BigDecimal>
 
 }
